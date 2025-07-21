@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTNB Calculator</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div id="app" class="w-full bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-primary mb-6">TTNB Calculator</h1>
+
+    <!-- Inputs and Button -->
+    <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+      <div class="flex-1">
+        <label class="block text-gray-700 mb-1" for="surface">Surface (m²):</label>
+        <input id="surface" v-model.number="surface" type="number" placeholder="Enter surface"
+               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+      </div>
+      <div class="flex-1">
+        <label class="block text-gray-700 mb-1" for="year">Year:</label>
+        <input id="year" v-model.number="year" type="number" placeholder="Enter year"
+               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+      </div>
+      <div class="flex-shrink-0">
+        <button @click="calculateTTNB"
+                class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+          Calculate
+        </button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div v-if="result !== null" class="mt-6 text-lg font-semibold text-gray-800">
+      Result: {{ result.toFixed(2) }}
+    </div>
+
+    <!-- Table -->
+    <div v-if="tableData.length" class="mt-6 overflow-x-auto">
+      <table class="min-w-full border border-gray-300 text-sm text-left">
+        <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 border">Year</th>
+          <th class="px-4 py-2 border">Calculated Price</th>
+          <th class="px-4 py-2 border">Non Report</th>
+          <th class="px-4 py-2 border">10% Tax</th>
+          <th class="px-4 py-2 border">5% Tax</th>
+          <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
+          <th class="px-4 py-2 border">Tax Monthly</th>
+          <th class="px-4 py-2 border">Sum</th>
+
+        </tr>
+      </thead>
+       <tbody>
+        <tr v-for="row in tableData" :key="row.year" class="hover:bg-gray-50">
+          <td class="px-4 py-2 border font-semibold">{{ row.year }}</td>
+          <td class="px-4 py-2 border">{{ row.calculatedPrice.toFixed(2) }}</td>
+          <td class="px-4 py-2 border">{{ row.nonReport }}</td>
+          <td class="px-4 py-2 border">{{ row.tax10.toFixed(2) }}</td>
+          <td class="px-4 py-2 border">{{ row.tax5.toFixed(2) }}</td>
+          <td class="px-4 py-2 border">{{ row.months }}</td>
+          <td class="px-4 py-2 border">{{ row.taxMonthly.toFixed(2) }}</td>
+          <td class="px-4 py-2 border font-semibold text-blue-700">{{ row.sum.toFixed(2) }}</td>
+        </tr>
+      </tbody>
+      <tfoot class="bg-yellow-100 font-semibold">
+  <tr>
+    <td class="px-4 py-2 border text-right">Total</td>
+    <td class="px-4 py-2 border">{{ total.calculatedPrice.toFixed(2) }}</td>
+    <td class="px-4 py-2 border">{{ total.nonReport.toFixed(2) }}</td>
+    <td class="px-4 py-2 border">{{ total.tax10.toFixed(2) }}</td>
+    <td class="px-4 py-2 border">{{ total.tax5.toFixed(2) }}</td>
+    <td class="px-4 py-2 border text-gray-400">—</td> <!-- Months: skipped -->
+    <td class="px-4 py-2 border">{{ total.taxMonthly.toFixed(2) }}</td>
+    <td class="px-4 py-2 border text-blue-700">{{ total.sum.toFixed(2) }}</td>
+  </tr>
+</tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- Vue CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          surface: null,
+          year: null,
+          result: null,
+          tableData: [], 
+          total: {
+          calculatedPrice: 0,
+          nonReport: 0,
+          tax10: 0,
+          tax5: 0,
+          taxMonthly: 0,
+          sum: 0
+        },
+        };
+      },
+      computed: {
+  totalMonthsLabel() {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // 1-indexed
+    let totalMonths = 0;
+    if (!this.year || this.year > currentYear) return '';
+
+    for (let y = this.year; y <= currentYear; y++) {
+      if (y === currentYear) {
+        totalMonths += currentMonth;
+      } else {
+        totalMonths += 12;
+      }
+    }
+
+    return `Months Tax (${totalMonths})`;
+  }
+},
+      methods: {
+     calculateTTNB() {
+  const baseRate = 10;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
+  if (this.surface && this.year && this.year <= currentYear) {
+    this.result = this.surface * baseRate + (this.year - 2000);
+    this.tableData = [];
+
+    const yearsRange = [];
+    for (let y = currentYear; y >= this.year; y--) {
+      yearsRange.push(y);
+    }
+
+    let monthsTracker = 0;
+    const monthsMap = {};
+
+    yearsRange.forEach((year) => {
+      const monthsToAdd = year === currentYear ? currentMonth : 12;
+      monthsTracker += monthsToAdd;
+      monthsMap[year] = monthsTracker;
+    });
+
+   for (let y = this.year; y <= currentYear; y++) {
+  const calculatedPrice = this.surface * 8;
+  const months = monthsMap[y];
+  const tax10 = calculatedPrice * 0.10;
+  const tax5 = calculatedPrice * 0.05;
+  const nonReport = 500;
+  const taxMonthly = calculatedPrice * months * 0.005;
+  const sum = calculatedPrice + nonReport + tax10 + tax5 + taxMonthly;
+
+  this.tableData.push({
+    year: y,
+    calculatedPrice,
+    nonReport,
+    tax10,
+    tax5,
+    months,
+    taxMonthly,
+    sum
+  });}
+
+  // Reset totals
+this.total = {
+  calculatedPrice: 0,
+  nonReport: 0,
+  tax10: 0,
+  tax5: 0,
+  taxMonthly: 0,
+  sum: 0
+};
+
+// Sum columns
+this.tableData.forEach(row => {
+  this.total.calculatedPrice += row.calculatedPrice;
+  this.total.nonReport += row.nonReport;
+  this.total.tax10 += row.tax10;
+  this.total.tax5 += row.tax5;
+  this.total.taxMonthly += row.taxMonthly;
+  this.total.sum += row.sum;
+});
+
+  } else {
+    this.result = null;
+    this.tableData = [];
+    alert("Please enter a valid surface and a year less than or equal to the current year.");
+  }
+}}
+    }).mount('#app');
+  </script>
+
+</body>
+</html>
