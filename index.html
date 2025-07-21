@@ -23,18 +23,18 @@
 <body class="bg-gray-100 p-6">
 
   <div id="app" class="w-full bg-white shadow-lg rounded-lg p-6">
-    <h1 class="text-2xl font-bold text-primary mb-6">TTNB Calculator</h1>
+    <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
 
     <!-- Inputs and Button -->
     <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
       <div class="flex-1">
-        <label class="block text-gray-700 mb-1" for="surface">Surface (m²):</label>
-        <input id="surface" v-model.number="surface" type="number" placeholder="Enter surface"
+        <label class="block text-gray-700 mb-1" for="surface">Superficie (m²):</label>
+        <input id="surface" v-model.number="surface" type="number" placeholder="Tapez surface"
                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
       </div>
       <div class="flex-1">
-        <label class="block text-gray-700 mb-1" for="year">Year:</label>
-        <input id="year" v-model.number="year" type="number" placeholder="Enter year"
+        <label class="block text-gray-700 mb-1" for="year">Année:</label>
+        <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
       </div>
       <div class="flex-shrink-0">
@@ -55,14 +55,14 @@
       <table class="min-w-full border border-gray-300 text-sm text-left">
         <thead class="bg-gray-100">
         <tr>
-          <th class="px-4 py-2 border">Year</th>
-          <th class="px-4 py-2 border">Calculated Price</th>
-          <th class="px-4 py-2 border">Non Report</th>
+          <th class="px-4 py-2 border">L'année</th>
+          <th class="px-4 py-2 border">Montant de base</th>
+          <th class="px-4 py-2 border">Défault Declaration</th>
           <th class="px-4 py-2 border">10% Tax</th>
           <th class="px-4 py-2 border">5% Tax</th>
           <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
-          <th class="px-4 py-2 border">Tax Monthly</th>
-          <th class="px-4 py-2 border">Sum</th>
+          <th class="px-4 py-2 border">Tax Du N° Mois x 0.50% </th>
+          <th class="px-4 py-2 border">TOTAL</th>
 
         </tr>
       </thead>
@@ -132,7 +132,7 @@
       }
     }
 
-    return `Months Tax (${totalMonths})`;
+    return `Total Des Mois (${totalMonths})`;
   }
 },
       methods: {
