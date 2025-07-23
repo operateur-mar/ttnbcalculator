@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TTNB Calculator</title>
-
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script>
     tailwind.config = {
       theme: {
@@ -22,201 +19,203 @@
 </head>
 <body class="bg-gray-100 p-6">
 
-  <div id="app" class="w-full bg-white shadow-lg rounded-lg p-6">
-    <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
+<div id="app" class="w-full bg-white shadow-lg rounded-lg p-6">
+  <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
 
-    <!-- Inputs and Button -->
-    <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
-      <div class="flex-1">
-        <label class="block text-gray-700 mb-1" for="surface">Superficie (m²):</label>
-        <input id="surface" v-model.number="surface" type="number" placeholder="Tapez surface"
-               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-      </div>
-      <div class="flex-1">
-        <label class="block text-gray-700 mb-1" for="year">Année:</label>
-        <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
-               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-      </div>
-      <div class="flex-shrink-0">
-        <button @click="calculateTTNB"
-                class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
-          Calculate
-        </button>
-      </div>
+  <!-- Inputs -->
+  <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="surface">Superficie (m²):</label>
+      <input id="surface" v-model.number="surface" type="number" placeholder="Tapez surface"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
     </div>
-
-    <!-- Result -->
-    <div v-if="result !== null" class="mt-6 text-lg font-semibold text-gray-800">
-      Result: {{ result.toFixed(2) }}
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="year">Année:</label>
+      <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
     </div>
-
-    <!-- Table -->
-    <div v-if="tableData.length" class="mt-6 overflow-x-auto">
-      <table class="min-w-full border border-gray-300 text-sm text-left">
-        <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2 border">L'année</th>
-          <th class="px-4 py-2 border">Montant de base</th>
-          <th class="px-4 py-2 border">Défault Declaration</th>
-          <th class="px-4 py-2 border">10% Tax</th>
-          <th class="px-4 py-2 border">5% Tax</th>
-          <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
-          <th class="px-4 py-2 border">Tax Du N° Mois x 0.50% </th>
-          <th class="px-4 py-2 border">TOTAL</th>
-
-        </tr>
-      </thead>
-       <tbody>
-        <tr v-for="row in tableData" :key="row.year" class="hover:bg-gray-50">
-          <td class="px-4 py-2 border font-semibold">{{ row.year }}</td>
-          <td class="px-4 py-2 border">{{ row.calculatedPrice.toFixed(2) }}</td>
-          <td class="px-4 py-2 border">{{ row.nonReport }}</td>
-          <td class="px-4 py-2 border">{{ row.tax10.toFixed(2) }}</td>
-          <td class="px-4 py-2 border">{{ row.tax5.toFixed(2) }}</td>
-          <td class="px-4 py-2 border">{{ row.months }}</td>
-          <td class="px-4 py-2 border">{{ row.taxMonthly.toFixed(2) }}</td>
-          <td class="px-4 py-2 border font-semibold text-blue-700">{{ row.sum.toFixed(2) }}</td>
-        </tr>
-      </tbody>
-      <tfoot class="bg-yellow-100 font-semibold">
-  <tr>
-    <td class="px-4 py-2 border text-right">Total</td>
-    <td class="px-4 py-2 border">{{ total.calculatedPrice.toFixed(2) }}</td>
-    <td class="px-4 py-2 border">{{ total.nonReport.toFixed(2) }}</td>
-    <td class="px-4 py-2 border">{{ total.tax10.toFixed(2) }}</td>
-    <td class="px-4 py-2 border">{{ total.tax5.toFixed(2) }}</td>
-    <td class="px-4 py-2 border text-gray-400">—</td> <!-- Months: skipped -->
-    <td class="px-4 py-2 border">{{ total.taxMonthly.toFixed(2) }}</td>
-    <td class="px-4 py-2 border text-blue-700">{{ total.sum.toFixed(2) }}</td>
-  </tr>
-</tfoot>
-      </table>
+    <div class="flex-shrink-0">
+      <button @click="calculateTTNB"
+              class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+        Calculate
+      </button>
     </div>
   </div>
 
-  <!-- Vue CDN -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Result -->
+  <div v-if="result !== null" class="mt-6 text-lg font-semibold text-gray-800">
+    Result: {{ result.toFixed(2) }}
+  </div>
 
-  <script>
-    const { createApp } = Vue;
+  <!-- Table -->
+  <div v-if="tableData.length" class="mt-6 overflow-x-auto">
+    <table class="min-w-full border border-gray-300 text-sm text-left">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border">L'année</th>
+        <th class="px-4 py-2 border">Montant de base</th>
+        <th class="px-4 py-2 border">Défault Declaration</th>
+        <th class="px-4 py-2 border">10% Tax</th>
+        <th class="px-4 py-2 border">5% Tax</th>
+        <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
+        <th class="px-4 py-2 border">Tax Du N° Mois x 0.50%</th>
+        <th class="px-4 py-2 border">TOTAL</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(row, index) in tableData" :key="row.year" class="hover:bg-gray-50">
+        <td class="px-4 py-2 border font-semibold">{{ row.year }}</td>
+        <td class="px-4 py-2 border">{{ row.calculatedPrice.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">
+          <label class="inline-flex items-center space-x-1">
+            <input type="checkbox" v-model="row.includeNonReport" @change="updateTotal()" class="form-checkbox text-primary">
+            <span>{{ row.nonReport }}</span>
+          </label>
+        </td>
+        <td class="px-4 py-2 border">{{ row.tax10.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">{{ row.tax5.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">{{ row.months }}</td>
+        <td class="px-4 py-2 border">{{ row.taxMonthly.toFixed(2) }}</td>
+        <td class="px-4 py-2 border font-semibold text-blue-700">{{ row.sum.toFixed(2) }}</td>
+      </tr>
+      </tbody>
+      <tfoot class="bg-yellow-100 font-semibold">
+      <tr>
+        <td class="px-4 py-2 border text-right">Total</td>
+        <td class="px-4 py-2 border">{{ total.calculatedPrice.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">{{ total.nonReport.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">{{ total.tax10.toFixed(2) }}</td>
+        <td class="px-4 py-2 border">{{ total.tax5.toFixed(2) }}</td>
+        <td class="px-4 py-2 border text-gray-400">—</td>
+        <td class="px-4 py-2 border">{{ total.taxMonthly.toFixed(2) }}</td>
+        <td class="px-4 py-2 border text-blue-700">{{ total.sum.toFixed(2) }}</td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
 
-    createApp({
-      data() {
-        return {
-          surface: null,
-          year: null,
-          result: null,
-          tableData: [], 
-          total: {
-          calculatedPrice: 0,
-          nonReport: 0,
-          tax10: 0,
-          tax5: 0,
-          taxMonthly: 0,
-          sum: 0
-        },
-        };
-      },
-      computed: {
-  totalMonthsLabel() {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1; // 1-indexed
-    let totalMonths = 0;
-    if (!this.year || this.year > currentYear) return '';
+<!-- Vue CDN -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
-    for (let y = this.year; y <= currentYear; y++) {
-      if (y === currentYear) {
-        totalMonths += currentMonth;
-      } else {
-        totalMonths += 12;
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      surface: null,
+      year: null,
+      result: null,
+      tableData: [],
+      total: {
+        calculatedPrice: 0,
+        nonReport: 0,
+        tax10: 0,
+        tax5: 0,
+        taxMonthly: 0,
+        sum: 0
       }
-    }
-
-    return `Total Des Mois (${totalMonths})`;
-  }
-},
-      methods: {
-     calculateTTNB() {
-  const baseRate = 10;
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-
-  if (this.surface && this.year && this.year <= currentYear) {
-    this.result = this.surface * baseRate + (this.year - 2000);
-    this.tableData = [];
-
-    // Generate the list of years in reverse (from current year to input year)
-    const yearsRange = [];
-    for (let y = currentYear; y >= this.year; y--) {
-      yearsRange.push(y);
-    }
-
-    // Now accumulate months in correct order (descending from current year)
-    let cumulativeMonths = 0;
-
-    // Final table will be pushed in ascending order of years
-    const reversedTable = [];
-
-    yearsRange.forEach((year, index) => {
-      let monthsForThisYear;
-      if (year === currentYear) {
-        monthsForThisYear = Math.max(currentMonth - 3, 0); // 4 for example
-      } else {
-        monthsForThisYear = 12;
-      }
-
-      cumulativeMonths += monthsForThisYear;
-
-      const calculatedPrice = this.surface * 8;
-      const tax10 = calculatedPrice * 0.10;
-      const tax5 = calculatedPrice * 0.05;
-      const nonReport = 500;
-      const taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
-      const sum = calculatedPrice + nonReport + tax10 + tax5 + taxMonthly;
-
-      reversedTable.push({
-        year,
-        calculatedPrice,
-        nonReport,
-        tax10,
-        tax5,
-        months: cumulativeMonths,
-        taxMonthly,
-        sum
-      });
-    });
-
-    // Sort to make it oldest year to newest
-    this.tableData = reversedTable.reverse();
-
-    // Reset totals
-    this.total = {
-      calculatedPrice: 0,
-      nonReport: 0,
-      tax10: 0,
-      tax5: 0,
-      taxMonthly: 0,
-      sum: 0
     };
+  },
+  computed: {
+    totalMonthsLabel() {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      let totalMonths = 0;
+      if (!this.year || this.year > currentYear) return '';
 
-    // Sum columns
-    this.tableData.forEach(row => {
-      this.total.calculatedPrice += row.calculatedPrice;
-      this.total.nonReport += row.nonReport;
-      this.total.tax10 += row.tax10;
-      this.total.tax5 += row.tax5;
-      this.total.taxMonthly += row.taxMonthly;
-      this.total.sum += row.sum;
-    });
+      for (let y = this.year; y <= currentYear; y++) {
+        totalMonths += (y === currentYear) ? currentMonth : 12;
+      }
 
-  } else {
-    this.result = null;
-    this.tableData = [];
-    alert("Vide !! ");
+      return `Total Des Mois (${totalMonths})`;
+    }
+  },
+  methods: {
+    calculateTTNB() {
+      const baseRate = 10;
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+
+      if (this.surface && this.year && this.year <= currentYear) {
+        this.result = this.surface * baseRate + (this.year - 2000);
+        this.tableData = [];
+
+        const yearsRange = [];
+        for (let y = currentYear; y >= this.year; y--) {
+          yearsRange.push(y);
+        }
+
+        let cumulativeMonths = 0;
+        const reversedTable = [];
+
+        yearsRange.forEach((year) => {
+          let monthsForThisYear;
+          if (year === currentYear) {
+            monthsForThisYear = Math.max(currentMonth - 3, 0);
+          } else {
+            monthsForThisYear = 12;
+          }
+
+          cumulativeMonths += monthsForThisYear;
+
+          const calculatedPrice = this.surface * 8;
+          const tax10 = calculatedPrice * 0.10;
+          const tax5 = calculatedPrice * 0.05;
+          const nonReport = 500;
+          const taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
+          const includeNonReport = true;
+
+          const sum = calculatedPrice + (includeNonReport ? nonReport : 0) + tax10 + tax5 + taxMonthly;
+
+          reversedTable.push({
+            year,
+            calculatedPrice,
+            tax10,
+            tax5,
+            months: cumulativeMonths,
+            taxMonthly,
+            nonReport,
+            includeNonReport,
+            sum
+          });
+        });
+
+        this.tableData = reversedTable.reverse();
+        this.updateTotal();
+
+      } else {
+        this.result = null;
+        this.tableData = [];
+        alert("Vide !! ");
+      }
+    },
+
+    updateTotal() {
+      this.total = {
+        calculatedPrice: 0,
+        nonReport: 0,
+        tax10: 0,
+        tax5: 0,
+        taxMonthly: 0,
+        sum: 0
+      };
+
+      this.tableData.forEach(row => {
+        this.total.calculatedPrice += row.calculatedPrice;
+        this.total.tax10 += row.tax10;
+        this.total.tax5 += row.tax5;
+        this.total.taxMonthly += row.taxMonthly;
+        const nonReportVal = row.includeNonReport ? row.nonReport : 0;
+        this.total.nonReport += nonReportVal;
+        row.sum = row.calculatedPrice + nonReportVal + row.tax10 + row.tax5 + row.taxMonthly;
+        this.total.sum += row.sum;
+      });
+    }
   }
-}}
-    }).mount('#app');
-  </script>
+}).mount('#app');
+</script>
 
 </body>
-</html>
+</html
