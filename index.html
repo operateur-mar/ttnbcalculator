@@ -34,6 +34,15 @@
       <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
     </div>
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="zone">Zone:</label>
+      <select id="zone" v-model="zone"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+        <option value="zone1">Zone 1 (8dh) </option>
+        <option value="zone2">Zone 2 (15dh)</option>
+        
+      </select>
+    </div>
     <div class="flex-shrink-0">
       <button @click="calculateTTNB"
               class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
@@ -107,6 +116,7 @@ createApp({
       surface: null,
       year: null,
       result: null,
+      zone: 'zone1', // default selected zone
       tableData: [],
       total: {
         calculatedPrice: 0,
@@ -124,22 +134,25 @@ createApp({
       const currentMonth = new Date().getMonth() + 1;
       let totalMonths = 0;
       if (!this.year || this.year > currentYear) return '';
-
       for (let y = this.year; y <= currentYear; y++) {
         totalMonths += (y === currentYear) ? currentMonth : 12;
       }
-
       return `Total Des Mois (${totalMonths})`;
     }
   },
   methods: {
     calculateTTNB() {
-      const baseRate = 10;
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth() + 1;
+      const zoneRates = {
+        zone1: 8,
+        zone2:15,
+        //zone3: 5
+      };
+      const multiplier = zoneRates[this.zone] || 6;
 
       if (this.surface && this.year && this.year <= currentYear) {
-        this.result = this.surface * baseRate + (this.year - 2000);
+        this.result = this.surface * multiplier + (this.year - 2000);
         this.tableData = [];
 
         const yearsRange = [];
@@ -151,18 +164,12 @@ createApp({
         const reversedTable = [];
 
         yearsRange.forEach((year) => {
-          if (year < 2008) {
-            
-            return;
-          }
+          if (year < 2008) return;
 
-          const multiplier = (year >= 2019) ? 8 : 6;
           const calculatedPrice = this.surface * multiplier;
-
           let monthsForThisYear = (year === currentYear)
             ? Math.max(currentMonth - 3, 0)
             : 12;
-
           cumulativeMonths += monthsForThisYear;
 
           const tax10 = calculatedPrice * 0.10;
@@ -191,11 +198,10 @@ createApp({
 
         this.tableData = reversedTable.reverse();
         this.updateTotal();
-
       } else {
         this.result = null;
         this.tableData = [];
-        alert("Vide !! ");
+        alert("Veuillez remplir les champs correctement.");
       }
     },
 
@@ -224,6 +230,5 @@ createApp({
 }).mount('#app');
 </script>
 
-
 </body>
-</html
+</html>
