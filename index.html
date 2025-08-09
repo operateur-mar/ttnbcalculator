@@ -142,68 +142,76 @@ createApp({
   },
   methods: {
     calculateTTNB() {
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-      const zoneRates = {
-        zone1: 8,
-        zone2:15,
-        //zone3: 5
-      };
-      const multiplier = zoneRates[this.zone] || 6;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const zoneRates = {
+    zone1: 8,
+    zone2: 15
+  };
 
-      if (this.surface && this.year && this.year <= currentYear) {
-        this.result = this.surface * multiplier + (this.year - 2000);
-        this.tableData = [];
+  // Apply the rule: if year < 2019, multiplier is 6
+  let multiplier;
+  if (this.year < 2019) {
+    multiplier = 6;
+  } else {
+    multiplier = zoneRates[this.zone] || 6;
+  }
 
-        const yearsRange = [];
-        for (let y = currentYear; y >= this.year; y--) {
-          yearsRange.push(y);
-        }
+  if (this.surface && this.year && this.year <= currentYear) {
+    this.result = this.surface * multiplier + (this.year - 2000);
+    this.tableData = [];
 
-        let cumulativeMonths = 0;
-        const reversedTable = [];
+    const yearsRange = [];
+    for (let y = currentYear; y >= this.year; y--) {
+      yearsRange.push(y);
+    }
 
-        yearsRange.forEach((year) => {
-          if (year < 2008) return;
+    let cumulativeMonths = 0;
+    const reversedTable = [];
 
-          const calculatedPrice = this.surface * multiplier;
-          let monthsForThisYear = (year === currentYear)
-            ? Math.max(currentMonth - 3, 0)
-            : 12;
-          cumulativeMonths += monthsForThisYear;
+    yearsRange.forEach((year) => {
+      if (year < 2008) return;
 
-          const tax10 = calculatedPrice * 0.10;
-          const tax5 = calculatedPrice * 0.05;
+      // Use the same pricing rule for each row
+      const yearMultiplier = (year < 2019) ? 6 : zoneRates[this.zone] || 6;
+      const calculatedPrice = this.surface * yearMultiplier;
 
-          const nonreportcalc = calculatedPrice * 0.15;
-          let nonReport = (nonreportcalc < 500) ? 500 : nonreportcalc;
+      let monthsForThisYear = (year === currentYear)
+        ? Math.max(currentMonth - 3, 0)
+        : 12;
+      cumulativeMonths += monthsForThisYear;
 
-          const taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
-          const includeNonReport = true;
+      const tax10 = calculatedPrice * 0.10;
+      const tax5 = calculatedPrice * 0.05;
 
-          const sum = calculatedPrice + (includeNonReport ? nonReport : 0) + tax10 + tax5 + taxMonthly;
+      const nonreportcalc = calculatedPrice * 0.15;
+      let nonReport = (nonreportcalc < 500) ? 500 : nonreportcalc;
 
-          reversedTable.push({
-            year,
-            calculatedPrice,
-            tax10,
-            tax5,
-            months: cumulativeMonths,
-            taxMonthly,
-            nonReport,
-            includeNonReport,
-            sum
-          });
-        });
+      const taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
+      const includeNonReport = true;
 
-        this.tableData = reversedTable.reverse();
-        this.updateTotal();
-      } else {
-        this.result = null;
-        this.tableData = [];
-        alert("Veuillez remplir les champs correctement.");
-      }
-    },
+      const sum = calculatedPrice + (includeNonReport ? nonReport : 0) + tax10 + tax5 + taxMonthly;
+
+      reversedTable.push({
+        year,
+        calculatedPrice,
+        tax10,
+        tax5,
+        months: cumulativeMonths,
+        taxMonthly,
+        nonReport,
+        includeNonReport,
+        sum
+      });
+    });
+
+    this.tableData = reversedTable.reverse();
+    this.updateTotal();
+  } else {
+    this.result = null;
+    this.tableData = [];
+    alert("Veuillez remplir les champs correctement.");
+  }},
 
     updateTotal() {
       this.total = {
