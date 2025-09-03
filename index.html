@@ -66,7 +66,8 @@
 
     <div>
         <h2 class="text-[20px] font-bold mb-2 text-center">Fiche de paiement TTNB</h2>
-        <p> {{ surface }}m²  | Valable jusqu'a le {{  endOfMonth }}</p>
+        <p class="text-center mr-15 mb-1"> {{ surface }}m²</p>
+        <p class="text-center">  de {{  currentDate }} à {{ endOfMonth }}</p>
     </div>
       
       <p></p>
@@ -160,6 +161,13 @@ createApp({
     const day = String(lastDay.getDate()).padStart(2, '0');
     const month = String(lastDay.getMonth() + 1).padStart(2, '0');
     const year = lastDay.getFullYear();
+    return `${day}/${month}/${year}`;
+  },
+   currentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
     return `${day}/${month}/${year}`;
   },
     totalMonthsLabel() {
