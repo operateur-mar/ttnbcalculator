@@ -1,0 +1,40 @@
+ @media print {
+    body * {
+      visibility: hidden;
+    }
+    #print-area, #print-area * {
+      visibility: visible;
+    }
+    #print-area {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+    .printbtn {
+      display: none;
+    }
+    #printbtn {
+      display: none;
+    
+    }
+    .print-heading {
+    display: flex!important;
+    justify-content: space-between!important;
+    }
+    #somme-print {
+      display: block!important;
+    }
+  }
+
+  .print-heading{
+    display: none;
+  }
+  #somme-print{
+    display: none;
+  }
+
+
+
+
+   
