@@ -25,6 +25,18 @@
     #somme-print {
       display: block!important;
     }
+    .modal-overlay {
+      display: none!important;
+    }
+    .tailing-print{
+      display: block!important;
+    }
+    .d-impr{
+      display: none!important;
+    }
+    .prop-content{
+      display: block!important;
+    }
   }
 
   .print-heading{
@@ -33,8 +45,31 @@
   #somme-print{
     display: none;
   }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-
-
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+.tailing-print{
+  display: none;
+}
+.tailing-print .bottom {
+  margin-top: 35px!important;
+}
+.prop-content{
+  display: none;
+}
 
    

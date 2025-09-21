@@ -62,26 +62,36 @@
   <div v-if="tableData.length" class="mt-6 overflow-x-auto" id="print-area">
     <div class="print-heading mb-4">
 
-      <p class="text-[12px] font-bold">ROYAUME DU MAROC <br> Ministère de L’Intérieur<br>Province de Fkih Ben Salah<br>CT-FKIH BEN SALAH</p>
+      <p class="text-[12px] font-bold">ROYAUME DU MAROC <br> Ministère de L’Intérieur<br>Province de Fkih Ben Salah<br>CT-FKIH BEN SALAH<br>S.D.R.F</p>
 
     <div>
-        <h2 class="text-[20px] font-bold mb-2 text-center">Fiche de paiement TTNB</h2>
-        <p class="text-center mr-15 mb-1"> {{ surface }}m²</p>
-        <p class="text-center">  de {{  currentDate }} à {{ endOfMonth }}</p>
+        <h2 class="text-[20px] font-bold mb-2 text-center">AVIS D'IMPOSITION</h2>
+        <p class="text-center mr-15 mb-1"> (Sauf erreur ou omission) </p>
+       
+       
     </div>
       
-      <p></p>
+      <p class="text-[12px] font-bold">Exercice: {{ getcurrentyear }}</p>
     </div>
+          <div class="prop-content w-full mb-8 mt-8">
+           
+            <p class="text-left mr-15 mb-1" v-if="nomProprietaire"> <span class="font-bold">Mr(mme):</span> {{ nomProprietaire }} -  {{ cin }} </p>
+            <p class="text-left mr-15 mb-1" v-if="adresse"><span class="font-bold">Adresse:</span> {{ adresse }} </p>
+            <p class="text-left mr-15 mb-1" v-if="titreFoncier"> <span class="font-bold">Titre Foncier:</span> {{ titreFoncier }} ({{ surface }} m²) </p>
+            <p class="text-left ">  <span class="font-bold">Valable du: </span> {{  currentDate }} à {{ endOfMonth }}</p>
+         
+        </div>
+
     <table class="min-w-full border border-gray-300 text-sm text-left">
       <thead class="bg-gray-100">
       <tr>
-        <th class="px-4 py-2 border">L'année</th>
-        <th class="px-4 py-2 border">Montant de base</th>
+        <th class="px-4 py-2 border">ANNEE</th>
+        <th class="px-4 py-2 border">Montant Principal</th>
         <th class="px-4 py-2 border">Défault Declaration</th>
-        <th class="px-4 py-2 border">10% Tax</th>
-        <th class="px-4 py-2 border">5% Tax</th>
+        <th class="px-4 py-2 border">10% </th>
+        <th class="px-4 py-2 border">5%</th>
         <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
-        <th class="px-4 py-2 border">Tax Du N° Mois x 0.50%</th>
+        <th class="px-4 py-2 border">0.50%</th>
         <th class="px-4 py-2 border">TOTAL</th>
       </tr>
       </thead>
@@ -116,13 +126,52 @@
       </tfoot>
     </table>
      <div class="flex justify-end mt-4" id="printbtn">
-      <button @click="printTable"
-              class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn">
-        Imprimer
-      </button>
+     
     </div>
     <div id="somme-print">
       <p class=" text-center font-bold text-[20px] mt-10">Total: {{  total.sum.toFixed(2) }}</p>
+    </div>
+    <div class="tailing-print w-full  mt-10 text-right">
+      <p class="font-bold text-[12px]">VISA BUREAUX D'ASSIETTES FISCALES</p>
+      <br/>
+      <p class="sign-gap mb-50"></p>
+      <br/>
+      <p class="bottom text-[10px] ">عدم التصريح بنتج عنه غرامة مالية (15%) أدناها 500 درهم طبقا للمادة 134 من القانون 47/06 المتعلق بجبايات الجماعات الترابية كما وقع تغييره وتتميمه بالقانون 07/20 الصادر في 2020/12/31 </p>
+      <br/>
+      <p class="text-[10px] ">غرامات التأخير: (10% و 5% و 0.5% عن كل شهر تأخير) ابتداءا من فاتح مارس من كل سنة = المادة 147 من القانون 47/09 المتعلق بجبايات الجماعة الترابية المشار اليه أعلاه.</p>
+    </div>
+    <!-- <button @click="printTable"
+              class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn">
+        Imprimer
+      </button>-->
+      <button  class="flex justify-center bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition d-impr" @click="showModal = true" >Imprimer</button>
+    <!-- Modal -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content p-6 bg-white rounded shadow-lg">
+        <h2 class="text-[20px] font-bold mb-2 text-center">Voulez-vous ajouter des autres details avant d'imprimer? </h2>
+        <p class="text-center">( Tous ces détails sont facultatifs )</p>
+      <div class="details-columns flex flex-col">
+         <input id="year" v-model="nomProprietaire" type="text" placeholder="Nom du Propriétaire"
+             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" />
+
+        <input id="year" v-model="cin" type="text" placeholder="CIN"
+             class=" border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" /> 
+
+        <input id="year" v-model="titreFoncier" type="text" placeholder="Titre Foncier"
+             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" /> 
+
+        <input id="year" v-model="adresse" type="text" placeholder="Adresse"
+             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" /> 
+      </div>
+
+       <div class="btn-impr flex justify-center flex-1">
+         <button @click="showModal = false" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition printbtn ml-5 mr-5">Annuler</button>
+        <button @click="printTable"
+              class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn ml-5 mr-5">
+        Imprimer
+      </button>
+       </div>
+      </div>
     </div>
   </div>
 </div>
@@ -140,6 +189,7 @@ createApp({
       surface: null,
       year: null,
       result: null,
+     showModal: false, // controls modal visibility
       zone: 'zone1', // default selected zone
       tableData: [],
       total: {
@@ -149,10 +199,19 @@ createApp({
         tax5: 0,
         taxMonthly: 0,
         sum: 0
-      }
+      }, 
+      nomProprietaire: '',
+      cin: '',  
+      titreFoncier: '',
+      adresse: ''
+      
     };
   },
   computed: {
+    getcurrentyear() {
+     
+      return new Date().getFullYear();
+    },
     endOfMonth() {
     const now = new Date();
     // Set to the first day of next month, then subtract one day
