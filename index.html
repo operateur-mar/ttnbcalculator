@@ -19,11 +19,102 @@
     }
   </script>
 </head>
-<body class="bg-gray-100 p-6">
+<body class="bg-gray-100 p-0">
 
-<div id="app" class="w-full bg-white shadow-lg rounded-lg p-6">
+<div id="app" class="w-full bg-white shadow-lg rounded-lg">
+  <!-- ==================== NAVBAR ==================== -->
+  <nav style = "display: none;" class="bg-purple-900 relative after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <!-- Mobile menu button -->
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <button
+            type="button"
+            @click="mobileOpen = !mobileOpen"
+            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
+          >
+            <span class="sr-only">Toggle main menu</span>
+            <!-- Icon: Hamburger -->
+            <svg
+              v-if="!mobileOpen"
+              class="size-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+            <!-- Icon: Close -->
+            <svg
+              v-else
+              class="size-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="hidden sm:block sm:ml-6">
+            <div class="flex space-x-4">
+              <a
+                v-for="(tab, index) in tabs"
+                :key="index"
+                href="#"
+                @click.prevent="currentTab = index"
+                :class="[
+                  'rounded-md px-3 py-2 text-sm font-medium transition',
+                  currentTab === index
+                    ? 'bg-gray-950/50 text-white'
+                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                ]"
+              >
+                {{ tab }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu (collapsible) -->
+    <div v-show="mobileOpen" class="sm:hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pb-3 pt-2">
+        <a
+          v-for="(tab, index) in tabs"
+          :key="index"
+          href="#"
+          @click.prevent="currentTab = index; mobileOpen = false"
+          :class="[
+            'block rounded-md px-3 py-2 text-base font-medium transition',
+            currentTab === index
+              ? 'bg-gray-950/50 text-white'
+              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+          ]"
+        >
+          {{ tab }}
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- ==================== ./ NAVBAR ==================== -->
+<!==================== FIRST TAB ==================== !>
+<div v-if="currentTab === 0" class="p-6">
   <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
-
   <!-- Inputs -->
   <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
     <div class="flex-1">
@@ -175,6 +266,46 @@
     </div>
   </div>
 </div>
+<!==================== ./ FIRST TAB ==================== !>
+<!==================== SECOND TAB ==================== !>
+<div v-if="currentTab === 1" class="p-6">
+   <h1 class="text-2xl font-bold text-primary mb-6">CALCULE FOURRIERE </h1>
+  <!-- Inputs -->
+  <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="surface">Date début:</label>
+      <input id="surface" v-model="fdatedebut" type="date"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+    </div>
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="year">Date fin:</label>
+      <input id="year" v-model="fdatefin" type="date"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+    </div>
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="zone">Type de véhicule:</label>
+      <select id="zone" v-model="fourriertarif"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+        <option value="15">الدراجات النارية (15dh) </option>
+        <option value="20">عربات ذات عجلتين (20dh)</option>
+        
+      </select>
+    </div>
+    <div class="flex-shrink-0">
+      <button @click="calculeFourriere"
+              class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+        Calculer
+      </button>
+    </div>
+  </div>
+  <div class="text-center mt-6 text-2xl font-semibold text-gray-800 flex justify-center text-bg-violet-500 flex-col align-center">
+    <h3>Nombre des Jours: <span class="text-violet-800"> {{ totalDays }}</span> </h3>
+    <br/>
+    <h3 class="mb-4">Total A Payé: <span class="text-violet-800"> {{ fourrierapaye }}</span> </h3>
+  </div>
+</div>
+<!==================== ./ SECOND TAB ==================== !>
+</div>
 
 <!-- Vue CDN -->
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -186,6 +317,9 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
+       currentTab: 0,
+       mobileOpen: false,
+      tabs: ['Calcule TTNB', 'Calcule Fourriere', 'Calcule Boissons', 'Calcule Taxi'],
       surface: null,
       year: null,
       result: null,
@@ -203,7 +337,14 @@ createApp({
       nomProprietaire: '',
       cin: '',  
       titreFoncier: '',
-      adresse: ''
+      adresse: '',
+
+      // Fourriere vars: 
+      fdatedebut: null,
+     fdatefin: new Date().toISOString().substr(0, 10), 
+     totalDays: 0,
+     fourrierapaye: 0,
+     fourriertarif:0
       
     };
   },
@@ -344,6 +485,43 @@ createApp({
         row.sum = row.calculatedPrice + nonReportVal + row.tax10 + row.tax5 + row.taxMonthly;
         this.total.sum += row.sum;
       });
+    }, 
+
+  
+      calculeFourriere() {
+    if (!this.fdatedebut || !this.fdatefin) {
+      alert(" sélectionner les  dates !");
+      return;
+    }
+
+    // Convert the inputs (which are strings like "2025-10-20") into Date objects
+    const start = new Date(this.fdatedebut);
+    const end = new Date(this.fdatefin);
+
+    // Calculate the difference in milliseconds
+    const diffInMs = end - start;
+
+    // Convert milliseconds → days (and include both start & end dates)
+    const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+
+    // If negative difference → invalid (end before start)
+    if (days < 0) {
+      alert("La date de fin doit être supérieur de la date de début !");
+      this.totalDays = 0;
+      return;
+    }
+
+    this.totalDays = days;
+    this.fourrierapaye = this.totalDays * this.fourriertarif;
+    console.log(this.totalDays);
+
+},
+data() {
+  return {
+    fdatedebut: "",
+    fdatefin: "",
+    totalDays: 0
+  }
     }
   }
 }).mount('#app');
