@@ -1,534 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CALCULE TTNB</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="maincss.css" />
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>CALCULE TTNB</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <link rel="stylesheet" href="maincss.css" />
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#4f46e5',
-          }
-        }
-      }
-    }
-  </script>
+ <script>
+   tailwind.config = {
+     theme: {
+       extend: {
+         colors: {
+           primary: '#4f46e5',
+         }
+       }
+     }
+   }
+ </script>
 </head>
 <body class="bg-gray-100 p-0">
 
 <div id="app" class="w-full bg-white shadow-lg rounded-lg">
-  <!-- ==================== NAVBAR ==================== -->
-  <nav style = "display: none;" class="bg-purple-900 relative after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
-        <!-- Mobile menu button -->
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <button
-            type="button"
-            @click="mobileOpen = !mobileOpen"
-            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
-          >
-            <span class="sr-only">Toggle main menu</span>
-            <!-- Icon: Hamburger -->
-            <svg
-              v-if="!mobileOpen"
-              class="size-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-            <!-- Icon: Close -->
-            <svg
-              v-else
-              class="size-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+ <!-- ==================== NAVBAR ==================== -->
+ <nav style = "display: none;" class="bg-purple-900 relative after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+     <div class="relative flex h-16 items-center justify-between">
+       <!-- Mobile menu button -->
+       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+         <button
+           type="button"
+           @click="mobileOpen = !mobileOpen"
+           class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
+         >
+           <span class="sr-only">Toggle main menu</span>
+           <!-- Icon: Hamburger -->
+           <svg
+             v-if="!mobileOpen"
+             class="size-6"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.5"
+           >
+             <path
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+             />
+           </svg>
+           <!-- Icon: Close -->
+           <svg
+             v-else
+             class="size-6"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.5"
+           >
+             <path
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M6 18 18 6M6 6l12 12"
+             />
+           </svg>
+         </button>
+       </div>
 
-        <!-- Desktop Menu -->
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4">
-              <a
-                v-for="(tab, index) in tabs"
-                :key="index"
-                href="#"
-                @click.prevent="currentTab = index"
-                :class="[
-                  'rounded-md px-3 py-2 text-sm font-medium transition',
-                  currentTab === index
-                    ? 'bg-gray-950/50 text-white'
-                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                ]"
-              >
-                {{ tab }}
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+       <!-- Desktop Menu -->
+       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+         <div class="hidden sm:block sm:ml-6">
+           <div class="flex space-x-4">
+             <a
+               v-for="(tab, index) in tabs"
+               :key="index"
+               href="#"
+               @click.prevent="currentTab = index"
+               :class="[
+                 'rounded-md px-3 py-2 text-sm font-medium transition',
+                 currentTab === index
+                   ? 'bg-gray-950/50 text-white'
+                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
+               ]"
+             >
+               {{ tab }}
+             </a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
 
-    <!-- Mobile Menu (collapsible) -->
-    <div v-show="mobileOpen" class="sm:hidden" id="mobile-menu">
-      <div class="space-y-1 px-2 pb-3 pt-2">
-        <a
-          v-for="(tab, index) in tabs"
-          :key="index"
-          href="#"
-          @click.prevent="currentTab = index; mobileOpen = false"
-          :class="[
-            'block rounded-md px-3 py-2 text-base font-medium transition',
-            currentTab === index
-              ? 'bg-gray-950/50 text-white'
-              : 'text-gray-300 hover:bg-white/5 hover:text-white'
-          ]"
-        >
-          {{ tab }}
-        </a>
-      </div>
-    </div>
-  </nav>
-  <!-- ==================== ./ NAVBAR ==================== -->
+   <!-- Mobile Menu (collapsible) -->
+   <div v-show="mobileOpen" class="sm:hidden" id="mobile-menu">
+     <div class="space-y-1 px-2 pb-3 pt-2">
+       <a
+         v-for="(tab, index) in tabs"
+         :key="index"
+         href="#"
+         @click.prevent="currentTab = index; mobileOpen = false"
+         :class="[
+           'block rounded-md px-3 py-2 text-base font-medium transition',
+           currentTab === index
+             ? 'bg-gray-950/50 text-white'
+             : 'text-gray-300 hover:bg-white/5 hover:text-white'
+         ]"
+       >
+         {{ tab }}
+       </a>
+     </div>
+   </div>
+ </nav>
+ <!-- ==================== ./ NAVBAR ==================== -->
 <!==================== FIRST TAB ==================== !>
 <div v-if="currentTab === 0" class="p-6">
-  <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
-  <!-- Inputs -->
-  <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="surface">Superficie (m²):</label>
-      <input id="surface" v-model.number="surface" type="number" placeholder="Tapez surface"
-             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-    </div>
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="year">Année:</label>
-      <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
-             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-    </div>
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="zone">Zone:</label>
-      <select id="zone" v-model="zone"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
-        <option value="zone1">Zone 1 (8dh) </option>
-        <option value="zone2">Zone 2 (15dh)</option>
-        
-      </select>
-    </div>
-    <div class="flex-shrink-0">
-      <button @click="calculateTTNB"
-              class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
-        Calculer
-      </button>
-    </div>
-  </div>
-
-  <!-- Result -->
-  <div v-if="result !== null" class="mt-6 text-lg font-semibold text-gray-800 flex justify-center dark:text-bg-violet-500">
-    TOTAL A PAYER: {{ total.sum.toFixed(2) }}
-  </div>
-
-  <!-- Table -->
-  <div v-if="tableData.length" class="mt-6 overflow-x-auto" id="print-area">
-    <div class="print-heading mb-4">
-
-      <p class="text-[12px] font-bold">ROYAUME DU MAROC <br> Ministère de L’Intérieur<br>Province de Fkih Ben Salah<br>CT-FKIH BEN SALAH<br>S.D.R.F</p>
-
-    <div>
-        <h2 class="text-[20px] font-bold mb-2 text-center">AVIS D'IMPOSITION</h2>
-        <p class="text-center mr-15 mb-1"> (Sauf erreur ou omission) </p>
-       
-       
-    </div>
+ <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TTNB </h1>
+ <!-- Inputs -->
+ <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="surface">Superficie (m²):</label>
+     <input id="surface" v-model.number="surface" type="number" placeholder="Tapez surface"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+   </div>
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="year">Année:</label>
+     <input id="year" v-model.number="year" type="number" placeholder="Tapez L'année"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+   </div>
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="zone">Zone:</label>
+     <select id="zone" v-model="zone"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+       <option value="zone1">Zone 1 (15dh) </option>
+      <!-- <option value="zone2">Zone 2 (15dh)</option> -->
       
-      <p class="text-[12px] font-bold">Exercice: {{ getcurrentyear }}</p>
-    </div>
-          <div class="prop-content w-full mb-8 mt-8">
-           
-            <p class="text-left mr-15 mb-1" v-if="nomProprietaire"> <span class="font-bold">Mr(mme):</span> {{ nomProprietaire }} -  {{ cin }} </p>
-            <p class="text-left mr-15 mb-1" v-if="adresse"><span class="font-bold">Adresse:</span> {{ adresse }} </p>
-            <p class="text-left mr-15 mb-1" v-if="titreFoncier"> <span class="font-bold">Titre Foncier:</span> {{ titreFoncier }} ({{ surface }} m²) </p>
-            <p class="text-left ">  <span class="font-bold">Valable du: </span> {{  currentDate }} à {{ endOfMonth }}</p>
-         
-        </div>
+     </select>
+   </div>
+   <div class="flex-shrink-0">
+     <button @click="calculateTTNB"
+             class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+       Calculer
+     </button>
+   </div>
+ </div>
 
-    <table class="min-w-full border border-gray-300 text-sm text-left">
-      <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2 border">ANNEE</th>
-        <th class="px-4 py-2 border">Montant Principal</th>
-        <th class="px-4 py-2 border">Défault Declaration</th>
-        <th class="px-4 py-2 border">10% </th>
-        <th class="px-4 py-2 border">5%</th>
-        <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
-        <th class="px-4 py-2 border">0.50%</th>
-        <th class="px-4 py-2 border">TOTAL</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(row, index) in tableData" :key="row.year" class="hover:bg-gray-50">
-        <td class="px-4 py-2 border font-semibold">{{ row.year }}</td>
-        <td class="px-4 py-2 border">{{ row.calculatedPrice.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">
-          <label class="inline-flex items-center space-x-1">
-            <input type="checkbox" v-model="row.includeNonReport" @change="updateTotal()" class="form-checkbox text-primary">
-            <span>{{ row.nonReport }}</span>
-          </label>
-        </td>
-        <td class="px-4 py-2 border">{{ row.tax10.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">{{ row.tax5.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">{{ row.months }}</td>
-        <td class="px-4 py-2 border">{{ row.taxMonthly.toFixed(2) }}</td>
-        <td class="px-4 py-2 border font-semibold text-blue-700">{{ row.sum.toFixed(2) }}</td>
-      </tr>
-      </tbody>
-      <tfoot class="bg-yellow-100 font-semibold">
-      <tr>
-        <td class="px-4 py-2 border text-center">Total</td>
-        <td class="px-4 py-2 border">{{ total.calculatedPrice.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">{{ total.nonReport.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">{{ total.tax10.toFixed(2) }}</td>
-        <td class="px-4 py-2 border">{{ total.tax5.toFixed(2) }}</td>
-        <td class="px-4 py-2 border text-gray-400">—</td>
-        <td class="px-4 py-2 border">{{ total.taxMonthly.toFixed(2) }}</td>
-        <td class="px-4 py-2 border text-blue-700">{{ total.sum.toFixed(2) }}</td>
-      </tr>
-      </tfoot>
-    </table>
-     <div class="flex justify-end mt-4" id="printbtn">
+ <!-- Result -->
+ <div v-if="result !== null" class="mt-6 text-lg font-semibold text-gray-800 flex justify-center dark:text-bg-violet-500">
+   TOTAL A PAYER: {{ total.sum.toFixed(2) }}
+ </div>
+
+ <!-- Table -->
+ <div v-if="tableData.length" class="mt-6 overflow-x-auto" id="print-area">
+   <div class="print-heading mb-4">
+
+     <p class="text-[12px] font-bold">ROYAUME DU MAROC <br> Ministère de L’Intérieur<br>Province de Fkih Ben Salah<br>CT-FKIH BEN SALAH<br>S.D.R.F</p>
+
+   <div>
+       <h2 class="text-[20px] font-bold mb-2 text-center">AVIS D'IMPOSITION</h2>
+       <p class="text-center mr-15 mb-1"> (Sauf erreur ou omission) </p>
      
-    </div>
-    <div id="somme-print">
-      <p class=" text-center font-bold text-[20px] mt-10">Total: {{  total.sum.toFixed(2) }}</p>
-    </div>
-    <div class="tailing-print w-full  mt-10 text-right">
-      <p class="font-bold text-[12px]">VISA BUREAUX D'ASSIETTES FISCALES</p>
-      <br/>
-      <p class="sign-gap mb-50"></p>
-      <br/>
-      <p class="bottom text-[10px] ">عدم التصريح بنتج عنه غرامة مالية (15%) أدناها 500 درهم طبقا للمادة 134 من القانون 47/06 المتعلق بجبايات الجماعات الترابية كما وقع تغييره وتتميمه بالقانون 07/20 الصادر في 2020/12/31 </p>
-      <br/>
-      <p class="text-[10px] ">غرامات التأخير: (10% و 5% و 0.5% عن كل شهر تأخير) ابتداءا من فاتح مارس من كل سنة = المادة 147 من القانون 47/09 المتعلق بجبايات الجماعة الترابية المشار اليه أعلاه.</p>
-    </div>
-    <!-- <button @click="printTable"
-              class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn">
-        Imprimer
-      </button>-->
-      <button  class="flex justify-center bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition d-impr" @click="showModal = true" >Imprimer</button>
-    <!-- Modal -->
-    <div v-if="showModal" class="modal-overlay">
-      <div class="modal-content p-6 bg-white rounded shadow-lg">
-        <h2 class="text-[20px] font-bold mb-2 text-center">Voulez-vous ajouter des autres details avant d'imprimer? </h2>
-        <p class="text-center">( Tous ces détails sont facultatifs )</p>
-      <div class="details-columns flex flex-col">
-         <input id="year" v-model="nomProprietaire" type="text" placeholder="Nom du Propriétaire"
-             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" />
-
-        <input id="year" v-model="cin" type="text" placeholder="CIN"
-             class=" border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" /> 
-
-        <input id="year" v-model="titreFoncier" type="text" placeholder="Titre Foncier"
-             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" /> 
-
-        <input id="year" v-model="adresse" type="text" placeholder="Adresse"
-             class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" /> 
-      </div>
-
-       <div class="btn-impr flex justify-center flex-1">
-         <button @click="showModal = false" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition printbtn ml-5 mr-5">Annuler</button>
-        <button @click="printTable"
-              class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn ml-5 mr-5">
-        Imprimer
-      </button>
+     
+   </div>
+    
+     <p class="text-[12px] font-bold">Exercice: {{ getcurrentyear }}</p>
+   </div>
+         <div class="prop-content w-full mb-8 mt-8">
+         
+           <p class="text-left mr-15 mb-1" v-if="nomProprietaire"> <span class="font-bold">Mr(mme):</span> {{ nomProprietaire }} -  {{ cin }} </p>
+           <p class="text-left mr-15 mb-1" v-if="adresse"><span class="font-bold">Adresse:</span> {{ adresse }} </p>
+           <p class="text-left mr-15 mb-1" v-if="titreFoncier"> <span class="font-bold">Titre Foncier:</span> {{ titreFoncier }} ({{ surface }} m²) </p>
+           <p class="text-left ">  <span class="font-bold">Valable du: </span> {{  currentDate }} à {{ endOfMonth }}</p>
+       
        </div>
+
+   <table class="min-w-full border border-gray-300 text-sm text-left">
+     <thead class="bg-gray-100">
+     <tr>
+       <th class="px-4 py-2 border">ANNEE</th>
+       <th class="px-4 py-2 border">Montant Principal</th>
+       <th class="px-4 py-2 border">Défault Declaration</th>
+       <th class="px-4 py-2 border">10% </th>
+       <th class="px-4 py-2 border">5%</th>
+       <th class="px-4 py-2 border">{{ totalMonthsLabel }}</th>
+       <th class="px-4 py-2 border">0.50%</th>
+       <th class="px-4 py-2 border">TOTAL</th>
+     </tr>
+     </thead>
+     <tbody>
+     <tr v-for="(row, index) in tableData" :key="row.year" class="hover:bg-gray-50">
+       <td class="px-4 py-2 border font-semibold">{{ row.year }}</td>
+       <td class="px-4 py-2 border">{{ row.calculatedPrice.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">
+         <label class="inline-flex items-center space-x-1">
+           <input type="checkbox" v-model="row.includeNonReport" @change="updateTotal()" class="form-checkbox text-primary">
+           <span>{{ row.nonReport }}</span>
+         </label>
+       </td>
+       <td class="px-4 py-2 border">{{ row.tax10.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">{{ row.tax5.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">{{ row.months }}</td>
+       <td class="px-4 py-2 border">{{ row.taxMonthly.toFixed(2) }}</td>
+       <td class="px-4 py-2 border font-semibold text-blue-700">{{ row.sum.toFixed(2) }}</td>
+     </tr>
+     </tbody>
+     <tfoot class="bg-yellow-100 font-semibold">
+     <tr>
+       <td class="px-4 py-2 border text-center">Total</td>
+       <td class="px-4 py-2 border">{{ total.calculatedPrice.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">{{ total.nonReport.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">{{ total.tax10.toFixed(2) }}</td>
+       <td class="px-4 py-2 border">{{ total.tax5.toFixed(2) }}</td>
+       <td class="px-4 py-2 border text-gray-400">—</td>
+       <td class="px-4 py-2 border">{{ total.taxMonthly.toFixed(2) }}</td>
+       <td class="px-4 py-2 border text-blue-700">{{ total.sum.toFixed(2) }}</td>
+     </tr>
+     </tfoot>
+   </table>
+    <div class="flex justify-end mt-4" id="printbtn">
+   
+   </div>
+   <div id="somme-print">
+     <p class=" text-center font-bold text-[20px] mt-10">Total: {{  total.sum.toFixed(2) }}</p>
+   </div>
+   <div class="tailing-print w-full  mt-10 text-right">
+     <p class="font-bold text-[12px]">VISA BUREAUX D'ASSIETTES FISCALES</p>
+     <br/>
+     <p class="sign-gap mb-50"></p>
+     <br/>
+     <p class="bottom text-[10px] ">عدم التصريح بنتج عنه غرامة مالية (15%) أدناها 500 درهم طبقا للمادة 134 من القانون 47/06 المتعلق بجبايات الجماعات الترابية كما وقع تغييره وتتميمه بالقانون 07/20 الصادر في 2020/12/31 </p>
+     <br/>
+     <p class="text-[10px] ">غرامات التأخير: (10% و 5% و 0.5% عن كل شهر تأخير) ابتداءا من فاتح مارس من كل سنة = المادة 147 من القانون 47/09 المتعلق بجبايات الجماعة الترابية المشار اليه أعلاه.</p>
+   </div>
+   <!-- <button @click="printTable"
+             class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn">
+       Imprimer
+     </button>-->
+     <button  class="flex justify-center bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition d-impr" @click="showModal = true" >Imprimer</button>
+   <!-- Modal -->
+   <div v-if="showModal" class="modal-overlay">
+     <div class="modal-content p-6 bg-white rounded shadow-lg">
+       <h2 class="text-[20px] font-bold mb-2 text-center">Voulez-vous ajouter des autres details avant d'imprimer? </h2>
+       <p class="text-center">( Tous ces détails sont facultatifs )</p>
+     <div class="details-columns flex flex-col">
+        <input id="year" v-model="nomProprietaire" type="text" placeholder="Nom du Propriétaire"
+            class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" />
+
+       <input id="year" v-model="cin" type="text" placeholder="CIN"
+            class=" border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary mt-2 mb-2" />
+
+       <input id="year" v-model="titreFoncier" type="text" placeholder="Titre Foncier"
+            class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+
+       <input id="year" v-model="adresse" type="text" placeholder="Adresse"
+            class="mt-2 mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+     </div>
+
+      <div class="btn-impr flex justify-center flex-1">
+        <button @click="showModal = false" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition printbtn ml-5 mr-5">Annuler</button>
+       <button @click="printTable"
+             class="bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition printbtn ml-5 mr-5">
+       Imprimer
+     </button>
       </div>
-    </div>
-  </div>
+     </div>
+   </div>
+ </div>
 </div>
 <!==================== ./ FIRST TAB ==================== !>
 <!==================== SECOND TAB ==================== !>
 <div v-if="currentTab === 1" class="p-6">
-   <h1 class="text-2xl font-bold text-primary mb-6">CALCULE FOURRIERE </h1>
-  <!-- Inputs -->
-  <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="surface">Date début:</label>
-      <input id="surface" v-model="fdatedebut" type="date"
-             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-    </div>
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="year">Date fin:</label>
-      <input id="year" v-model="fdatefin" type="date"
-             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-    </div>
-    <div class="flex-1">
-      <label class="block text-gray-700 mb-1" for="zone">Type de véhicule:</label>
-      <select id="zone" v-model="fourriertarif"
-              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
-        <option value="15">الدراجات النارية (15dh) </option>
-        <option value="20">عربات ذات عجلتين (20dh)</option>
-        
-      </select>
-    </div>
-    <div class="flex-shrink-0">
-      <button @click="calculeFourriere"
-              class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
-        Calculer
-      </button>
-    </div>
-  </div>
-  <div class="text-center mt-6 text-2xl font-semibold text-gray-800 flex justify-center text-bg-violet-500 flex-col align-center">
-    <h3>Nombre des Jours: <span class="text-violet-800"> {{ totalDays }}</span> </h3>
-    <br/>
-    <h3 class="mb-4">Total A Payé: <span class="text-violet-800"> {{ fourrierapaye }}</span> </h3>
-  </div>
+  <h1 class="text-2xl font-bold text-primary mb-6">CALCULE FOURRIERE </h1>
+ <!-- Inputs -->
+ <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="surface">Date début:</label>
+     <input id="surface" v-model="fdatedebut" type="date"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+   </div>
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="year">Date fin:</label>
+     <input id="year" v-model="fdatefin" type="date"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+   </div>
+   <div class="flex-1">
+     <label class="block text-gray-700 mb-1" for="zone">Type de véhicule:</label>
+     <select id="zone" v-model="fourriertarif"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+       <option value="15">الدراجات النارية (15dh) </option>
+       <option value="20">عربات ذات عجلتين (20dh)</option>
+      
+     </select>
+   </div>
+   <div class="flex-shrink-0">
+     <button @click="calculeFourriere"
+             class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+       Calculer
+     </button>
+   </div>
+ </div>
+ <div class="text-center mt-6 text-2xl font-semibold text-gray-800 flex justify-center text-bg-violet-500 flex-col align-center">
+   <h3>Nombre des Jours: <span class="text-violet-800"> {{ totalDays }}</span> </h3>
+   <br/>
+   <h3 class="mb-4">Total A Payé: <span class="text-violet-800"> {{ fourrierapaye }}</span> </h3>
+ </div>
 </div>
 <!==================== ./ SECOND TAB ==================== !>
 </div>
 
 <!-- Vue CDN -->
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-
 <script>
-
-const { createApp } = Vue;
-
-createApp({
-  data() {
-    return {
+ const { createApp } = Vue;
+  createApp({
+   data() {
+     return {
        currentTab: 0,
        mobileOpen: false,
-      tabs: ['Calcule TTNB', 'Calcule Fourriere', 'Calcule Boissons', 'Calcule Taxi'],
-      surface: null,
-      year: null,
-      result: null,
-     showModal: false, // controls modal visibility
-      zone: 'zone1', // default selected zone
-      tableData: [],
-      total: {
-        calculatedPrice: 0,
-        nonReport: 0,
-        tax10: 0,
-        tax5: 0,
-        taxMonthly: 0,
-        sum: 0
-      }, 
-      nomProprietaire: '',
-      cin: '',  
-      titreFoncier: '',
-      adresse: '',
-
-      // Fourriere vars: 
-      fdatedebut: null,
-     fdatefin: new Date().toISOString().substr(0, 10), 
-     totalDays: 0,
-     fourrierapaye: 0,
-     fourriertarif:0
-      
-    };
-  },
-  computed: {
-    getcurrentyear() {
-     
-      return new Date().getFullYear();
-    },
-    endOfMonth() {
-    const now = new Date();
-    // Set to the first day of next month, then subtract one day
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    // Format as DD/MM/YYYY
-    const day = String(lastDay.getDate()).padStart(2, '0');
-    const month = String(lastDay.getMonth() + 1).padStart(2, '0');
-    const year = lastDay.getFullYear();
-    return `${day}/${month}/${year}`;
-  },
-   currentDate() {
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    return `${day}/${month}/${year}`;
-  },
-    totalMonthsLabel() {
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-      let totalMonths = 0;
-      if (!this.year || this.year > currentYear) return '';
-      for (let y = this.year; y <= currentYear; y++) {
-        totalMonths += (y === currentYear) ? currentMonth : 12;
-      }
-      return `Total Des Mois (${totalMonths})`;
-    }
-  },
-  methods: {
-    printTable() {
-      window.print();
-    },
-    calculateTTNB() {
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const zoneRates = {
-    zone1: 8,
-    zone2: 15
-  };
-  
-
-  // Apply the rule: if year < 2019, multiplier is 6
-  let multiplier;
-  if (this.year < 2019) {
-    multiplier = 6;
-  } else {
-    multiplier = zoneRates[this.zone] || 6;
-  }
-
-  if (this.surface && this.year && this.year <= currentYear) {
-    this.result = this.surface * multiplier + (this.year - 2000);
-    this.tableData = [];
-
-    const yearsRange = [];
-    for (let y = currentYear; y >= this.year; y--) {
-      yearsRange.push(y);
-    }
-
-    let cumulativeMonths = 0;
-    const reversedTable = [];
-
-   yearsRange.forEach((year) => {
-  if (year < 2008) return;
-
-  // Apply pricing rule per year
-  const yearMultiplier = (year < 2019) ? 6 : zoneRates[this.zone] || 6;
-  const calculatedPrice = this.surface * yearMultiplier;
-
-  // Apply month calculation rule
-  let monthsForThisYear;
-  if (year === currentYear) {
-    monthsForThisYear = Math.max(currentMonth - 3, 0);
-  } else if (year === 2020) {
-    monthsForThisYear = 9; // Special rule for 2020
-  } else {
-    monthsForThisYear = 12;
-  }
-
-  cumulativeMonths += monthsForThisYear;
-
-  const tax10 = calculatedPrice * 0.10;
-  const tax5 = calculatedPrice * 0.05;
-
-  const nonreportcalc = calculatedPrice * 0.15;
-  let nonReport = (nonreportcalc < 500) ? 500 : nonreportcalc;
-
-  const taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
-  const includeNonReport = true;
-
-  const sum = calculatedPrice + (includeNonReport ? nonReport : 0) + tax10 + tax5 + taxMonthly;
-
-  reversedTable.push({
-    year,
-    calculatedPrice,
-    tax10,
-    tax5,
-    months: cumulativeMonths,
-    taxMonthly,
-    nonReport,
-    includeNonReport,
-    sum
-  });
-});
-
-    this.tableData = reversedTable.reverse();
-    this.updateTotal();
-  } else {
-    this.result = null;
-    this.tableData = [];
-    alert("Veuillez remplir les champs correctement.");
-  }},
-
-    updateTotal() {
-      this.total = {
-        calculatedPrice: 0,
-        nonReport: 0,
-        tax10: 0,
-        tax5: 0,
-        taxMonthly: 0,
-        sum: 0
-      };
-
-      this.tableData.forEach(row => {
-        this.total.calculatedPrice += row.calculatedPrice;
-        this.total.tax10 += row.tax10;
-        this.total.tax5 += row.tax5;
-        this.total.taxMonthly += row.taxMonthly;
-        const nonReportVal = row.includeNonReport ? row.nonReport : 0;
-        this.total.nonReport += nonReportVal;
-        row.sum = row.calculatedPrice + nonReportVal + row.tax10 + row.tax5 + row.taxMonthly;
-        this.total.sum += row.sum;
-      });
-    }, 
-
-  
-      calculeFourriere() {
-    if (!this.fdatedebut || !this.fdatefin) {
-      alert(" sélectionner les  dates !");
-      return;
-    }
-
-    // Convert the inputs (which are strings like "2025-10-20") into Date objects
-    const start = new Date(this.fdatedebut);
-    const end = new Date(this.fdatefin);
-
-    // Calculate the difference in milliseconds
-    const diffInMs = end - start;
-
-    // Convert milliseconds → days (and include both start & end dates)
-    const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
-
-    // If negative difference → invalid (end before start)
-    if (days < 0) {
-      alert("La date de fin doit être supérieur de la date de début !");
-      this.totalDays = 0;
-      return;
-    }
-
-    this.totalDays = days;
-    this.fourrierapaye = this.totalDays * this.fourriertarif;
-    console.log(this.totalDays);
-
-},
-data() {
-  return {
-    fdatedebut: "",
-    fdatefin: "",
-    totalDays: 0
-  }
-    }
-  }
-}).mount('#app');
-
-</script>
+       tabs: ['Calcule TTNB', 'Calcule Fourriere', 'Calcule Boissons', 'Calcule Taxi'],
+       surface: null,
+       year: null,
+       result: null,
+       showModal: false,
+       zone: 'zone1',
+       tableData: [],
+       total: {
+         calculatedPrice: 0,
+         nonReport: 0,
+         tax10: 0,
+         tax5: 0,
+         taxMonthly: 0,
+         sum: 0
+       },
+       nomProprietaire: '',
+       cin: '',
+       titreFoncier: '',
+       adresse: '',
+        // Fourriere
+       fdatedebut: null,
+       fdatefin: new Date().toISOString().substr(0, 10),
+       totalDays: 0,
+       fourrierapaye: 0,
+       fourriertarif: 0
+     };
+   },
+    methods: {
+     printTable() {
+       window.print();
+     },
+      calculateTTNB() {
+       const currentYear = new Date().getFullYear();
+       const currentMonth = new Date().getMonth() + 1;
+       const isEarlyYear = currentMonth === 1 || currentMonth === 2;
+        if (!this.surface || !this.year || this.year > currentYear) {
+         alert("Veuillez remplir les champs correctement.");
+         return;
+       }
+        this.result = this.surface * this.getTTNBTarif(this.year);
+        const yearsRange = [];
+       for (let y = currentYear; y >= this.year; y--) {
+         yearsRange.push(y);
+       }
+        let cumulativeMonths = 0;
+       const reversedTable = [];
+        yearsRange.forEach(year => {
+         if (year < 2008) return;
+          const yearMultiplier = this.getTTNBTarif(year);
+         const calculatedPrice = this.surface * yearMultiplier;
+          let monthsForThisYear;
+         if (year === currentYear) {
+           monthsForThisYear = Math.max(currentMonth - 3, 0);
+         } else if (year === 2020) {
+           monthsForThisYear = 9;
+         } else {
+           monthsForThisYear = 12;
+         }
+          cumulativeMonths += monthsForThisYear;
+          const isCurrentYearRow = year === currentYear;
+          let tax10 = 0;
+         let tax5 = 0;
+         let nonReport = 0;
+         let taxMonthly = 0;
+         let includeNonReport = false;
+          // ✅ Taxes apply normally EXCEPT for current year in Jan/Feb
+         if (!(isEarlyYear && isCurrentYearRow)) {
+           tax10 = calculatedPrice * 0.10;
+           tax5 = calculatedPrice * 0.05;
+            const nonreportcalc = calculatedPrice * 0.15;
+           nonReport = nonreportcalc < 500 ? 500 : nonreportcalc;
+           includeNonReport = true;
+            taxMonthly = calculatedPrice * cumulativeMonths * 0.005;
+         }
+          const sum =
+           calculatedPrice +
+           (includeNonReport ? nonReport : 0) +
+           tax10 +
+           tax5 +
+           taxMonthly;
+          reversedTable.push({
+           year,
+           calculatedPrice,
+           tax10,
+           tax5,
+           months: cumulativeMonths,
+           taxMonthly,
+           nonReport,
+           includeNonReport,
+           sum
+         });
+       });
+        this.tableData = reversedTable.reverse();
+       this.updateTotal();
+     },
+      getTTNBTarif(year) {
+       if (year < 2019) return 6;
+       if (year >= 2026) return 15;
+        const zoneRates = {
+         zone1: 8,
+         zone2: 15
+       };
+        return zoneRates[this.zone] || 6;
+     },
+      updateTotal() {
+       this.total = {
+         calculatedPrice: 0,
+         nonReport: 0,
+         tax10: 0,
+         tax5: 0,
+         taxMonthly: 0,
+         sum: 0
+       };
+        this.tableData.forEach(row => {
+         this.total.calculatedPrice += row.calculatedPrice;
+         this.total.tax10 += row.tax10;
+         this.total.tax5 += row.tax5;
+         this.total.taxMonthly += row.taxMonthly;
+         this.total.nonReport += row.includeNonReport ? row.nonReport : 0;
+         this.total.sum += row.sum;
+       });
+     }
+   }
+ }).mount('#app');
+ </script>
+ 
 
 
 
 </body>
 </html>
+
