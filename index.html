@@ -132,7 +132,7 @@
      <select id="zone" v-model="zone"
              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
        <option value="zone1">Zone 1 (15dh) </option>
-      <!-- <option value="zone2">Zone 2 (15dh)</option> -->
+       <option value="zone2">Zone R+4 (15dh)</option>
       
      </select>
    </div>
@@ -421,22 +421,33 @@
         return zoneRates[this.zone] || 6;
      },
       updateTotal() {
-       this.total = {
-         calculatedPrice: 0,
-         nonReport: 0,
-         tax10: 0,
-         tax5: 0,
-         taxMonthly: 0,
-         sum: 0
-       };
+        this.total = {
+          calculatedPrice: 0,
+          nonReport: 0,
+          tax10: 0,
+          tax5: 0,
+          taxMonthly: 0,
+          sum: 0
+        };
         this.tableData.forEach(row => {
-         this.total.calculatedPrice += row.calculatedPrice;
-         this.total.tax10 += row.tax10;
-         this.total.tax5 += row.tax5;
-         this.total.taxMonthly += row.taxMonthly;
-         this.total.nonReport += row.includeNonReport ? row.nonReport : 0;
-         this.total.sum += row.sum;
-       });
+    const nonReportVal = row.includeNonReport ? row.nonReport : 0;
+
+    // 🔥 Recalculate row sum dynamically
+    row.sum =
+      row.calculatedPrice +
+      nonReportVal +
+      row.tax10 +
+      row.tax5 +
+      row.taxMonthly;
+
+    // 🔢 Global totals
+    this.total.calculatedPrice += row.calculatedPrice;
+    this.total.nonReport += nonReportVal;
+    this.total.tax10 += row.tax10;
+    this.total.tax5 += row.tax5;
+    this.total.taxMonthly += row.taxMonthly;
+    this.total.sum += row.sum;
+  });
      }
    }
  }).mount('#app');
