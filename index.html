@@ -381,7 +381,7 @@
          let nonReport = 0;
          let taxMonthly = 0;
          let includeNonReport = false;
-          // ✅ Taxes apply normally EXCEPT for current year in Jan/Feb
+          // Jan + Feb difference 
          if (!(isEarlyYear && isCurrentYearRow)) {
            tax10 = calculatedPrice * 0.10;
            tax5 = calculatedPrice * 0.05;
@@ -432,7 +432,7 @@
         this.tableData.forEach(row => {
     const nonReportVal = row.includeNonReport ? row.nonReport : 0;
 
-    // 🔥 Recalculate row sum dynamically
+    // Recalculate row sum dynamically
     row.sum =
       row.calculatedPrice +
       nonReportVal +
@@ -440,7 +440,7 @@
       row.tax5 +
       row.taxMonthly;
 
-    // 🔢 Global totals
+    //  Global totals
     this.total.calculatedPrice += row.calculatedPrice;
     this.total.nonReport += nonReportVal;
     this.total.tax10 += row.tax10;

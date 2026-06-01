@@ -40,7 +40,7 @@ createApp({
     zone2: 15
   };
 
-  // Apply the rule: if year < 2019, multiplier is 6
+  //  if year < 2019, multiplier - 6
   let multiplier;
   if (this.year < 2019) {
     multiplier = 6;
@@ -63,16 +63,16 @@ createApp({
    yearsRange.forEach((year) => {
   if (year < 2008) return;
 
-  // Apply pricing rule per year
+  //  pricing rule per year
   const yearMultiplier = (year < 2019) ? 6 : zoneRates[this.zone] || 6;
   const calculatedPrice = this.surface * yearMultiplier;
 
-  // Apply month calculation rule
+  //  month calculation rule
   let monthsForThisYear;
   if (year === currentYear) {
     monthsForThisYear = Math.max(currentMonth - 3, 0);
   } else if (year === 2020) {
-    monthsForThisYear = 9; // Special rule for 2020
+    monthsForThisYear = 9; // Special 2020 ( covid calc)
   } else {
     monthsForThisYear = 12;
   }
