@@ -23,15 +23,15 @@
 
 <div id="app" class="w-full bg-white shadow-lg rounded-lg">
  <!-- ==================== NAVBAR ==================== -->
- <nav style = "display:none;" class="bg-purple-900 relative after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
-   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-     <div class="relative flex h-16 items-center justify-between">
+ <nav class="bg-white border-b border-gray-200">
+   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+     <div class="flex h-16 items-center justify-between">
        <!-- Mobile menu button -->
-       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+       <div class="flex items-center sm:hidden">
          <button
            type="button"
            @click="mobileOpen = !mobileOpen"
-           class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
+           class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition"
          >
            <span class="sr-only">Toggle main menu</span>
            <!-- Icon: Hamburger -->
@@ -68,42 +68,40 @@
        </div>
 
        <!-- Desktop Menu -->
-       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-         <div class="hidden sm:block sm:ml-6">
-           <div class="flex space-x-4">
-             <a
-               v-for="(tab, index) in tabs"
-               :key="index"
-               href="#"
-               @click.prevent="currentTab = index"
-               :class="[
-                 'rounded-md px-3 py-2 text-sm font-medium transition',
-                 currentTab === index
-                   ? 'bg-gray-950/50 text-white'
-                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
-               ]"
-             >
-               {{ tab }}
-             </a>
-           </div>
+       <div class="hidden sm:block">
+         <div class="flex space-x-1">
+           <a
+             v-for="(tab, index) in tabs"
+             :key="index"
+             href="#"
+             @click.prevent="currentTab = index"
+             :class="[
+               'px-4 py-2 text-sm font-medium transition border-b-2',
+               currentTab === index
+                 ? 'text-gray-900 border-gray-900'
+                 : 'text-gray-600 border-transparent hover:text-gray-900'
+             ]"
+           >
+             {{ tab }}
+           </a>
          </div>
        </div>
      </div>
    </div>
 
    <!-- Mobile Menu (collapsible) -->
-   <div v-show="mobileOpen" class="sm:hidden" id="mobile-menu">
-     <div class="space-y-1 px-2 pb-3 pt-2">
+   <div v-show="mobileOpen" class="sm:hidden border-t border-gray-200">
+     <div class="px-2 pt-2 pb-3 space-y-1">
        <a
          v-for="(tab, index) in tabs"
          :key="index"
          href="#"
          @click.prevent="currentTab = index; mobileOpen = false"
          :class="[
-           'block rounded-md px-3 py-2 text-base font-medium transition',
+           'block px-3 py-2 rounded-md text-base font-medium transition',
            currentTab === index
-             ? 'bg-gray-950/50 text-white'
-             : 'text-gray-300 hover:bg-white/5 hover:text-white'
+             ? 'text-gray-900 bg-gray-100'
+             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
          ]"
        >
          {{ tab }}
@@ -425,7 +423,7 @@
      return {
        currentTab: 0,
        mobileOpen: false,
-       tabs: ['Calcule TTNB', 'Calcule Fourriere', 'Calcule Boissons', 'Calcule Taxi'],
+       tabs: ['Calcule TTNB', '', 'Calcule Boissons', ''],
        surface: null,
        year: null,
        result: null,
