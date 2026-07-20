@@ -267,40 +267,56 @@
 <!==================== ./ FIRST TAB ==================== !>
 <!==================== SECOND TAB ==================== !>
 <div v-if="currentTab === 1" class="p-6">
-  <h1 class="text-2xl font-bold text-primary mb-6">CALCULE FOURRIERE </h1>
- <!-- Inputs -->
- <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
-   <div class="flex-1">
-     <label class="block text-gray-700 mb-1" for="surface">Date début:</label>
-     <input id="surface" v-model="fdatedebut" type="date"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-   </div>
-   <div class="flex-1">
-     <label class="block text-gray-700 mb-1" for="year">Date fin:</label>
-     <input id="year" v-model="fdatefin" type="date"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
-   </div>
-   <div class="flex-1">
-     <label class="block text-gray-700 mb-1" for="zone">Type de véhicule:</label>
-     <select id="zone" v-model="fourriertarif"
-             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
-       <option value="15">الدراجات النارية (15dh) </option>
-       <option value="20">عربات ذات عجلتين (20dh)</option>
-      
-     </select>
-   </div>
-   <div class="flex-shrink-0">
-     <button @click="calculeFourriere"
-             class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
-       Calculer
-     </button>
-   </div>
- </div>
- <div class="text-center mt-6 text-2xl font-semibold text-gray-800 flex justify-center text-bg-violet-500 flex-col align-center">
-   <h3>Nombre des Jours: <span class="text-violet-800"> {{ totalDays }}</span> </h3>
-   <br/>
-   <h3 class="mb-4">Total A Payé: <span class="text-violet-800"> {{ fourrierapaye }}</span> </h3>
- </div>
+  <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-primary">CALCULE FOURRIERE</h1>
+        
+      </div>
+      <div class="rounded-2xl bg-gray-50 px-4 py-3 text-right text-sm text-gray-600">
+        <p class="font-semibold text-gray-900">Date actuelle</p>
+        <p>{{ fdatefin }}</p>
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div>
+        <label class="block text-gray-700 mb-2" for="fourriere-debut">Date début</label>
+        <input id="fourriere-debut" v-model="fdatedebut" type="date"
+               class="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-primary focus:outline-none focus:ring focus:ring-primary/10" />
+      </div>
+      <div>
+        <label class="block text-gray-700 mb-2" for="fourriere-fin">Date fin</label>
+        <input id="fourriere-fin" v-model="fdatefin" type="date" 
+               class="w-full rounded-2xl border border-gray-300 bg-gray-100 px-4 py-3 text-gray-600 " />
+      </div>
+      <div>
+        <label class="block text-gray-700 mb-2" for="fourriere-tarif">Type de véhicule</label>
+        <select id="fourriere-tarif" v-model="fourriertarif"
+                class="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-primary focus:outline-none focus:ring focus:ring-primary/10">
+          <option value="15">الدراجات النارية (15dh)</option>
+          <option value="20">عربات ذات عجلتين (20dh)</option>
+        </select>
+      </div>
+      <div class="flex items-end">
+        <button @click="calculeFourriere"
+                class="w-full rounded-2xl bg-primary px-6 py-3 text-white shadow-sm transition hover:bg-indigo-700">
+          Calculer
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      <div class="rounded-3xl border border-gray-200 bg-gray-50 p-5">
+        <p class="text-sm font-medium text-gray-500">Nombre des jours</p>
+        <p class="mt-3 text-4xl font-semibold text-primary">{{ totalDays }}</p>
+      </div>
+      <div class="rounded-3xl border border-gray-200 bg-gray-50 p-5">
+        <p class="text-sm font-medium text-gray-500">Total à payer</p>
+        <p class="mt-3 text-4xl font-semibold text-primary">{{ fourrierapaye }}</p>
+      </div>
+    </div>
+  </div>
 </div>
 <!==================== ./ SECOND TAB ==================== !>
 <div v-if="currentTab === 2" class="p-6">
@@ -726,6 +742,26 @@
         row.penalite10 = row.months === 0 ? 0 : row.montantPrincipal * 0.10;
         row.majoration05 = row.months === 0 ? 0 : row.montantPrincipal * row.months * 0.005;
         row.total = row.montantPrincipal + row.majoration5 + row.penalite10 + row.majoration05;
+      },
+      calculeFourriere() {
+        if (!this.fdatedebut || !this.fdatefin) {
+          alert('Veuillez sélectionner une date de début et une date de fin.');
+          return;
+        }
+        const start = new Date(this.fdatedebut);
+        const end = new Date(this.fdatefin);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+          alert('Les dates saisies sont invalides.');
+          return;
+        }
+        if (start > end) {
+          alert('La date de début doit être antérieure ou égale à la date de fin.');
+          return;
+        }
+        const millisecondsPerDay = 1000 * 60 * 60 * 24;
+        const dayCount = Math.floor((end - start) / millisecondsPerDay) + 1;
+        this.totalDays = dayCount;
+        this.fourrierapaye = dayCount * Number(this.fourriertarif || 0);
       },
       updateTotal() {
         this.total = {
