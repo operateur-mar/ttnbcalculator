@@ -412,6 +412,96 @@
     </table>
   </div>
 </div>
+
+<div v-if="currentTab === 3" class="p-6">
+  <h1 class="text-2xl font-bold text-primary mb-6">CALCULE TAXI</h1>
+  <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="taxi-trimestre">Trimestre:</label>
+      <select id="taxi-trimestre" v-model="taxiTrimestre"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+        <option value="T1">1er Trimestre</option>
+        <option value="T2">2eme Trimestre</option>
+        <option value="T3">3eme Trimestre</option>
+        <option value="T4">4eme Trimestre</option>
+      </select>
+    </div>
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="taxi-year">Année:</label>
+      <input id="taxi-year" v-model.number="taxiYear" type="number" placeholder="Année"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary" />
+    </div>
+    <div class="flex-1">
+      <label class="block text-gray-700 mb-1" for="taxi-tarif">Type Taxi:</label>
+      <select id="taxi-tarif" v-model="taxiTarif"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-primary">
+        <option value="1">Petit Taxi</option>
+        <option value="2">Grand Taxi</option>
+      </select>
+    </div>
+    <div class="flex-shrink-0">
+      <button @click="generateTaxi"
+              class="w-full bg-primary text-white px-5 py-2 rounded hover:bg-indigo-700 transition">
+        Générer
+      </button>
+    </div>
+  </div>
+  <div v-if="taxiResult" class="mt-6 text-gray-800">
+    <p class="font-semibold">Trimestre: {{ taxiResult.trimestre }}</p>
+    <p class="font-semibold">Année: {{ taxiResult.year }}</p>
+    <p class="font-semibold">Tarif: {{ taxiResult.tarif }}</p>
+    <p class="font-semibold">Nombre de lignes: {{ taxiRows.length }}</p>
+  </div>
+  <div v-if="taxiRows.length" class="mt-6 overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 border border-gray-300 text-sm text-left">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-3 py-2 border">Année</th>
+          <th class="px-3 py-2 border">Trimestre</th>
+          <th class="px-3 py-2 border">Mois</th>
+          <th class="px-3 py-2 border">Montant Principale</th>
+          <th class="px-3 py-2 border">Majoration 5%</th>
+          <th class="px-3 py-2 border">Pénalité 10%</th>
+          <th class="px-3 py-2 border">Majoration 0.5%</th>
+          <th class="px-3 py-2 border">Total</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr v-for="(row, index) in taxiRows" :key="index">
+          <td class="px-3 py-2 border">{{ row.year }}</td>
+          <td class="px-3 py-2 border">{{ row.trimestre }}</td>
+          <td class="px-3 py-2 border">{{ row.months }}</td>
+          <td class="px-3 py-2 border">
+            <input :value="row.montantPrincipal.toFixed(2)" disabled
+                   class="w-full border border-gray-300 rounded px-2 py-1 bg-gray-100 text-gray-600" />
+          </td>
+          <td class="px-3 py-2 border">
+            <input :value="row.months === 0 ? '' : row.majoration5.toFixed(2)" disabled
+                   class="w-full border border-gray-300 rounded px-2 py-1 bg-gray-100 text-gray-600" />
+          </td>
+          <td class="px-3 py-2 border">
+            <input :value="row.months === 0 ? '' : row.penalite10.toFixed(2)" disabled
+                   class="w-full border border-gray-300 rounded px-2 py-1 bg-gray-100 text-gray-600" />
+          </td>
+          <td class="px-3 py-2 border">
+            <input :value="row.months === 0 ? '' : row.majoration05.toFixed(2)" disabled
+                   class="w-full border border-gray-300 rounded px-2 py-1 bg-gray-100 text-gray-600" />
+          </td>
+          <td class="px-3 py-2 border">
+            <input :value="row.total.toFixed(2)" disabled
+                   class="w-full border border-gray-300 rounded px-2 py-1 bg-gray-100 text-gray-600" />
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="bg-gray-100 font-semibold">
+        <tr>
+          <td class="px-3 py-2 border text-right" colspan="7">Total globale</td>
+          <td class="px-3 py-2 border">{{ taxiRows.reduce((sum, row) => sum + row.total, 0).toFixed(2) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
 </div>
 
 <!-- Vue CDN -->
@@ -423,7 +513,7 @@
      return {
        currentTab: 0,
        mobileOpen: false,
-       tabs: ['Calcule TTNB', '', 'Calcule Boissons', ''],
+       tabs: ['Calcule TTNB', 'Calcule Fourriere', 'Calcule Boissons', 'Calcule Taxi'],
        surface: null,
        year: null,
        result: null,
@@ -453,7 +543,13 @@
        boissonYear: new Date().getFullYear(),
        boissonTarif: null,
        boissonsResult: null,
-       boissonsRows: []
+       boissonsRows: [],
+       // Taxi
+       taxiTrimestre: 'T1',
+       taxiYear: new Date().getFullYear(),
+       taxiTarif: null,
+       taxiResult: null,
+       taxiRows: []
      };
    },
     methods: {
@@ -585,6 +681,51 @@
         const declarationValue = row.declarationChecked ? 500 : 0;
         row.declarationValue = declarationValue;
         row.total = row.montantAPayer + declarationValue;
+      },
+      generateTaxi() {
+        if (!this.taxiYear || !this.taxiTarif) {
+          alert('Veuillez renseigner l’année et le tarif.');
+          return;
+        }
+        const selectedQuarter = parseInt(this.taxiTrimestre.slice(1), 10);
+        const today = new Date();
+        const currentQuarter = Math.ceil((today.getMonth() + 1) / 3);
+        const currentYear = today.getFullYear();
+        const startIndex = this.taxiYear * 4 + selectedQuarter;
+        const currentIndex = currentYear * 4 + currentQuarter;
+        const numberOfTrimestres = Math.max(currentIndex - startIndex + 1, 0);
+
+        this.taxiResult = {
+          trimestre: this.taxiTrimestre,
+          year: this.taxiYear,
+          tarif: this.taxiTarif,
+          count: numberOfTrimestres
+        };
+        this.taxiRows = Array.from({ length: numberOfTrimestres }, (_, index) => {
+          const quarterOffset = selectedQuarter - 1 + index;
+          const year = this.taxiYear + Math.floor(quarterOffset / 4);
+          const trimestre = `T${(quarterOffset % 4) + 1}`;
+          const months = (numberOfTrimestres - 1 - index) * 3;
+          const row = {
+            year,
+            trimestre,
+            months,
+            montantPrincipal: 0,
+            majoration5: 0,
+            penalite10: 0,
+            majoration05: 0,
+            total: 0
+          };
+          this.recalculateTaxiRow(row);
+          return row;
+        });
+      },
+      recalculateTaxiRow(row) {
+        row.montantPrincipal = 100;
+        row.majoration5 = row.months === 0 ? 0 : row.montantPrincipal * 0.05;
+        row.penalite10 = row.months === 0 ? 0 : row.montantPrincipal * 0.10;
+        row.majoration05 = row.months === 0 ? 0 : row.montantPrincipal * row.months * 0.005;
+        row.total = row.montantPrincipal + row.majoration5 + row.penalite10 + row.majoration05;
       },
       updateTotal() {
         this.total = {
